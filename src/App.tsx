@@ -1,23 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useContext, useState } from 'react';
+import logo from './logo.png';
 import './App.css';
+import { Setting } from './models/interfaces';
+import { useSettingContext } from './context/SettingsContext';
+import { useLocalStorage } from './context/useLocalStorage';
 
-function App() {
+interface AppProps {
+  heading: string;
+}
+
+function App({ heading }: AppProps) {
+  const { state, dispatch } = useSettingContext();
+  const setting = state as Setting;
+  const [_, setSetting] = useLocalStorage<string>("setting", JSON.stringify(setting));
+
+  const updateState = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    dispatch({ type: 'SET_VOLUME', payload: 20 })
+    dispatch({ type: 'SET_CURRENT_SONG', payload: 'AI Music' })
+    dispatch({ type: 'SET_ANALYTICS', payload: true })
+    setSetting(JSON.stringify(setting));
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={logo} alt="logo" />
         <p>
-          Edit <code>src/App.tsx</code> and save to reload.
+          {heading}
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <span>Volume: {setting && setting.volume}</span>
+        <span>Current Song: {setting && setting.currentSong}</span>
+        <span>Analytics On: {setting && setting.analyticsOn ? '1' : ''}</span>
+        <br />
+        <button onClick={updateState}>Update Settings</button>
       </header>
     </div>
   );
