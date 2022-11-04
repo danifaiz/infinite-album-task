@@ -3,7 +3,6 @@ import logo from './logo.png';
 import './App.css';
 import { Setting } from './models/interfaces';
 import { useSettingContext } from './context/SettingsContext';
-import { useLocalStorage } from './context/useLocalStorage';
 
 interface AppProps {
   heading: string;
@@ -12,14 +11,12 @@ interface AppProps {
 function App({ heading }: AppProps) {
   const { state, dispatch } = useSettingContext();
   const setting = state as Setting;
-  const [_, setSetting] = useLocalStorage<string>("setting", JSON.stringify(setting));
 
   const updateState = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     dispatch({ type: 'SET_VOLUME', payload: 20 })
     dispatch({ type: 'SET_CURRENT_SONG', payload: 'AI Music' })
     dispatch({ type: 'SET_ANALYTICS', payload: true })
-    setSetting(JSON.stringify(setting));
   }
 
   return (

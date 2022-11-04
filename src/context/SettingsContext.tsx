@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 
 export interface SettingState<T> {
@@ -50,6 +50,12 @@ const SettingsContext = createContext<{
 const SettingsProvider = ({ children }: SettingProviderProps) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const value = { state, dispatch };
+  const [localStorage, setLocalStorage] = useLocalStorage<string>("setting", JSON.stringify(state));
+
+  useEffect(() => {
+    setLocalStorage(JSON.stringify(state))
+  }, [state]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <SettingsContext.Provider value={value}>
       {children}
@@ -60,7 +66,7 @@ const SettingsProvider = ({ children }: SettingProviderProps) => {
 const useSettingContext = () => {
   const context = useContext(SettingsContext);
   if (context === undefined) {
-    throw new Error("useSettingState must be used within a SettingsProvider");
+    throw new Error("useSettingContext must be used within a SettingsProvider");
   }
   return context;
 };
