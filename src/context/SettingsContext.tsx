@@ -19,7 +19,7 @@ interface SettingProviderProps {
 
 const initialState = {};
 
-function reducer<T>(state: SettingState<T>, action: Action<T>) {
+function reducer<T>(state: SettingState<T>, action: Action<T>): SettingState<T> {
   const { type, payload } = action;
   switch (type) {
     case "SET_VOLUME":

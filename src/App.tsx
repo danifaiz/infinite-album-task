@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 import logo from './logo.png';
 import './App.css';
 import { Setting } from './models/interfaces';
